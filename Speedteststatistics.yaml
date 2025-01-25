@@ -1,0 +1,354 @@
+name: Speedtest statistics
+updateFrequency: never
+timeSelector: {}
+sharedTimeInterval:
+  enabled: false
+  isLive: false
+  start: 30d
+widgets:
+  37e6b3d4-914d-4702-9a74-62b1c0cf2f25:
+    x: 0
+    y: 11
+    height: 5
+    queryString: |-
+      #type=speedtest server.country=?country server.name=?server
+      | downloadInMbps:=download.bytes*8/download.elapsed/1000
+      | uploadInMbps:=upload.bytes*8/upload.elapsed/1000
+      | timechart(series=server.name, function=[avg(downloadInMbps, as=download), avg(uploadInMbps, as=upload)])
+    end: now
+    start: 30d
+    width: 12
+    options:
+      series: {}
+      interpolation: monotone
+      connect-points: true
+      extrapolate: false
+      plotType: line
+      regression: false
+      show-utc: true
+      imputation: lerp
+    visualization: time-chart
+    title: Up/Dowload speed over time
+    isLive: false
+    type: query
+  03bdf672-a184-45af-9312-299437294a6b:
+    x: 3
+    y: 3
+    height: 3
+    queryString: |-
+      #type=speedtest server.country=?country server.name=?server
+      | uploadInMbps:=upload.bytes*8/upload.elapsed/1000
+      | min(uploadInMbps)
+    end: now
+    start: 30d
+    width: 3
+    options:
+      show-min-max: true
+      padding: 0
+      trellisShowBorders: false
+      gaugeType: radialNeedle
+      thresholdConfig:
+        palette: Green yellow red
+        reversePalette: true
+        thresholds:
+        - value: 500
+        - value: 600
+        - value: 700
+        - value: 800
+      value-format: abbreviated
+      range-max: 1000
+    visualization: gauge
+    title: Min. upload
+    isLive: false
+    type: query
+  084ef5d8-c12d-4010-ae58-6be8b4a8db0b:
+    x: 6
+    y: 0
+    height: 3
+    queryString: |-
+      #type=speedtest server.country=?country server.name=?server
+      | downloadInMbps:=download.bytes*8/download.elapsed/1000
+      | uploadInMbps:=upload.bytes*8/upload.elapsed/1000
+      | avg(downloadInMbps)
+    end: now
+    start: 30d
+    width: 3
+    options:
+      show-min-max: true
+      labels: []
+      padding: 0
+      trellisShowBorders: false
+      gaugeType: radialNeedle
+      thresholdConfig:
+        palette: Green yellow red
+        reversePalette: true
+        thresholds:
+        - value: 500
+        - value: 600
+        - value: 700
+        - value: 800
+      value-format: abbreviated
+      range-max: 1000
+    visualization: gauge
+    title: Avg. download
+    isLive: false
+    type: query
+  f4b850e6-dc72-40b8-b661-166aa5bfa569:
+    x: 0
+    y: 6
+    height: 5
+    queryString: |-
+      #type=speedtest server.country=?country server.name=?server
+      | asn(server.ip)
+      | downloadInMbps:=download.bytes*8/download.elapsed/1000
+      | uploadInMbps:=upload.bytes*8/upload.elapsed/1000
+      | table([@timestamp,isp,server.name,server.ip.org,server.location,server.country,downloadInMbps,uploadInMbps,ping.latency])
+      | rename(field=[[@timestamp, Time], [isp, "Your ISP"], [server.name, "Test server"], [server.ip.org, "IP block owner"], [server.location, "Test server city"], [server.country, "Test server country"], [downloadInMbps, "Download in Mbps"], [uploadInMbps, "Upload in Mbps"], [ping.latency, "ping latency"]])
+    end: now
+    start: 30d
+    width: 12
+    options:
+      cell-overflow: wrap-text
+      configured-columns:
+        ping.latency:
+          data-type: number
+          precision: 2
+        Download in Mbps:
+          data-type: number
+          precision: 2
+          thousands-separator: true
+        ping latency:
+          data-type: number
+          precision: 2
+        download.bandwidth:
+          data-type: number
+          thousands-separator: true
+        uploadInMbps:
+          data-type: number
+          precision: 2
+          thousands-separator: true
+        Time:
+          data-type: datetime
+        downloadInMbps:
+          data-type: number
+          precision: 2
+          thousands-separator: true
+        Upload in Mbps:
+          data-type: number
+          precision: 2
+          thousands-separator: true
+      row-numbers-enabled: false
+    visualization: table-view
+    title: Speed tests
+    isLive: false
+    type: query
+  56991578-d665-489e-bd93-55063a399375:
+    x: 3
+    y: 0
+    height: 3
+    queryString: |-
+      #type=speedtest server.country=?country server.name=?server
+      | downloadInMbps:=download.bytes*8/download.elapsed/1000
+      | min(downloadInMbps)
+    end: now
+    start: 30d
+    width: 3
+    options:
+      show-min-max: true
+      labels: []
+      padding: 0
+      trellisShowBorders: false
+      gaugeType: radialNeedle
+      thresholdConfig:
+        palette: Green yellow red
+        reversePalette: true
+        thresholds:
+        - value: 500
+        - value: 600
+        - value: 700
+        - value: 800
+      value-format: abbreviated
+      range-max: 1000
+    visualization: gauge
+    title: Min. download
+    isLive: false
+    type: query
+  c9b00ee0-49b2-4b3b-b822-9a7fc0884462:
+    x: 0
+    y: 3
+    height: 3
+    queryString: |-
+      #type=speedtest server.country=?country server.name=?server
+      | tail(1)
+      | uploadInMbps:=upload.bytes*8/upload.elapsed/1000
+      | table(uploadInMbps)
+    end: now
+    start: 30d
+    width: 3
+    options:
+      show-min-max: true
+      padding: 0
+      trellisShowBorders: false
+      gaugeType: radialNeedle
+      thresholdConfig:
+        palette: Green yellow red
+        reversePalette: true
+        thresholds:
+        - value: 500
+        - value: 600
+        - value: 700
+        - value: 800
+      value-format: abbreviated
+      range-max: 1000
+    visualization: gauge
+    title: Latest upload
+    isLive: false
+    type: query
+  9155fdf5-ace3-4d4b-9cc7-f44b9cc92f35:
+    x: 0
+    y: 0
+    height: 3
+    queryString: |-
+      #type=speedtest server.country=?country server.name=?server
+      | tail(1)
+      | downloadInMbps:=download.bytes*8/download.elapsed/1000
+      | table(downloadInMbps)
+    end: now
+    start: 30d
+    width: 3
+    options:
+      show-min-max: true
+      padding: 0
+      trellisShowBorders: false
+      gaugeType: radialNeedle
+      thresholdConfig:
+        palette: Green yellow red
+        reversePalette: true
+        thresholds:
+        - value: 500
+        - value: 600
+        - value: 700
+        - value: 800
+      value-format: abbreviated
+      range-max: 1000
+    visualization: gauge
+    title: Latest download
+    isLive: false
+    type: query
+  d855a623-96d9-46c3-b473-cfd54ed1d4d7:
+    x: 9
+    y: 0
+    height: 3
+    queryString: |-
+      #type=speedtest server.country=?country server.name=?server
+      | downloadInMbps:=download.bytes*8/download.elapsed/1000
+      | max(downloadInMbps)
+    end: now
+    start: 30d
+    width: 3
+    options:
+      show-min-max: true
+      labels: []
+      padding: 0
+      trellisShowBorders: false
+      gaugeType: radialNeedle
+      thresholdConfig:
+        palette: Green yellow red
+        reversePalette: true
+        thresholds:
+        - value: 500
+        - value: 600
+        - value: 700
+        - value: 800
+      value-format: abbreviated
+      range-max: 1000
+    visualization: gauge
+    title: Max download
+    isLive: false
+    type: query
+  f2ab5fd2-5ff0-4f72-89d2-ebf68dea8e86:
+    x: 6
+    y: 3
+    height: 3
+    queryString: |-
+      #type=speedtest server.country=?country server.name=?server
+      | uploadInMbps:=upload.bytes*8/upload.elapsed/1000
+      | avg(uploadInMbps)
+    end: now
+    start: 30d
+    width: 3
+    options:
+      show-min-max: true
+      padding: 0
+      trellisShowBorders: false
+      gaugeType: radialNeedle
+      thresholdConfig:
+        palette: Green yellow red
+        reversePalette: true
+        thresholds:
+        - value: 500
+        - value: 600
+        - value: 700
+        - value: 800
+      value-format: abbreviated
+      range-max: 1000
+    visualization: gauge
+    title: Avg. upload
+    isLive: false
+    type: query
+  21dfd2e5-36a5-4961-bf83-820753e20b55:
+    x: 9
+    y: 3
+    height: 3
+    queryString: |-
+      #type=speedtest server.country=?country server.name=?server
+      | uploadInMbps:=upload.bytes*8/upload.elapsed/1000
+      | max(uploadInMbps)
+    end: now
+    start: 30d
+    width: 3
+    options:
+      show-min-max: true
+      padding: 0
+      trellisShowBorders: false
+      gaugeType: radialNeedle
+      thresholdConfig:
+        palette: Green yellow red
+        reversePalette: true
+        thresholds:
+        - value: 500
+        - value: 600
+        - value: 700
+        - value: 800
+      value-format: abbreviated
+      range-max: 1000
+    visualization: gauge
+    title: Max upload
+    isLive: false
+    type: query
+$schema: https://schemas.humio.com/dashboard/v0.17.0
+parameters:
+  country:
+    label: Country
+    query: |-
+      #type=speedtest
+      | groupby(server.country, function=[])
+    timeInterval: 1d
+    useDashboardTimeIfSet: true
+    type: query
+    defaultValue: '*'
+    width: 1
+    order: 50
+    valueField: server.country
+  server:
+    label: Test server
+    query: |-
+      #type=speedtest
+      | groupby(server.name, function=[])
+    timeInterval: 1d
+    useDashboardTimeIfSet: true
+    type: query
+    defaultValue: '*'
+    width: 1
+    order: 50
+    valueField: server.name

@@ -1,0 +1,61 @@
+name: Speedtest upload vs download by test server
+updateFrequency: never
+timeSelector: {}
+sharedTimeInterval:
+  enabled: false
+  isLive: false
+  start: 1d
+widgets:
+  d2c1d317-ee62-47f6-868c-d95561c73d53:
+    x: 0
+    y: 0
+    height: 11
+    queryString: |-
+      #type=speedtest server.country=?country server.name=?server
+      | "Download in Mbps":=download.bytes*8/download.elapsed/1000
+      | "Upload in Mbps":=upload.bytes*8/upload.elapsed/1000
+      | groupBy(server.name, function=[groupBy(["Download in Mbps","Upload in Mbps"])])
+      | rename(field="server.name", as="Test server")
+    end: now
+    start: 30d
+    width: 12
+    options:
+      legendLabelOverflow: truncate
+      legend: true
+      xScaleType: linear
+      withLegendTitle: true
+      regression: false
+      inputDataFormat: long
+      yZero: false
+      xZero: false
+      withXAxisTitle: true
+    visualization: scatter-chart
+    title: Upload vs Download scatter graph
+    isLive: false
+    type: query
+$schema: https://schemas.humio.com/dashboard/v0.17.0
+parameters:
+  country:
+    label: Country
+    query: |-
+      #type=speedtest
+      | groupby(server.country, function=[])
+    timeInterval: 1d
+    useDashboardTimeIfSet: true
+    type: query
+    defaultValue: '*'
+    width: 1
+    order: 50
+    valueField: server.country
+  server:
+    label: Test server
+    query: |-
+      #type=speedtest
+      | groupby(server.name, function=[])
+    timeInterval: 1d
+    useDashboardTimeIfSet: true
+    type: query
+    defaultValue: '*'
+    width: 1
+    order: 50
+    valueField: server.name

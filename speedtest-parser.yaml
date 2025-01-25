@@ -1,0 +1,7 @@
+name: speedtest
+fieldsToBeRemovedBeforeParsing: []
+$schema: https://schemas.humio.com/parser/v0.3.0
+script: |-
+  // bjorn.graabek@crowdstrike.com
+  parseJson() | parseTimestamp(field=timestamp)
+tagFields: []
