@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Script by bjorn.graabek@crowdstrike.com
+# Script by Bjorn Graabek
 # This script uses Speedtest CLI to run tests and sends the results to a LogScale or Falcon NG-SIEM instance using HEC.
 # Speedtest CLI can be downloaded here: https://www.speedtest.net/apps/cli
 # Download and install speedtest cli + get the LogScale/Falcon NG-SIEM ingest url and token before running the script
@@ -19,8 +19,8 @@
 #INGEST_URL=<ingest url/APU url>/api/v1/ingest/hec/raw
 #INGEST_TOKEN=<token/API key>
 
-INGEST_URL=https://sa-cluster.humio-support.com/api/v1/ingest/hec/raw
-INGEST_TOKEN=acee0c08-df06-4f9f-a88b-c33dfe83c091
+INGEST_URL=https://<URL>/api/v1/ingest/hec/raw
+INGEST_TOKEN=<TOKEN>
 
 # This block tests against servers IDs listed in the speedtest_id.txt file.
 # If the file doesn't exist the script continues to the next block.
